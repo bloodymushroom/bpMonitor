@@ -1,0 +1,114 @@
+:root {
+	--greyDark: #141414;
+	--greyMedium: #5B5655;
+	--greyLight: #9E9D9D;
+	--greyLightest: #D9D8D7;
+	--purpleDark: #777FAF;
+	--purpleMedium: #552DB9;
+	--purpleLight: #CAC1E1;
+	--headerFontSize: 19px;
+	--contentFontSize: 16px;
+	--formInputSize: 39px;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	font-family: arial;
+}
+
+.clearfix {
+	overflow: auto;
+	zoom: 1;
+}
+
+.view {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.containerForm {
+	width: 320px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-bottom: 3px solid var(--greyLight);
+	padding: 20px 0 30px 0;
+}
+
+.containerForm * {
+	border-radius: 5px;
+}
+
+.inputHeader {
+	margin-bottom: 10px;
+	font-weight: bold;
+	font-size: var(--headerFontSize);
+	font-color: var(--greyDark);
+}
+
+.inputContainer {
+	font-size: 39px;
+	color: var(--greyLight);
+	padding: 10px;
+	width: 200px;
+	margin: 20px 0 20px 0;
+	border: 3px solid var(--greyLightest);
+/*	border-radius: 15px;
+*/	text-align: center;
+}
+
+.inputContainer > input {
+	color: var(--greyMedium);
+	border: none;
+	margin: 0px;
+	font-size: 39px;
+	width: 80px;
+}
+
+.submitButton {
+	font-weight: bold;
+	padding: 10px;
+	width: 150px;
+	font-size: 19px;
+	color: #FFFFFF;
+	background-color: var(--purpleLight);
+	border: none;
+	outline: none;
+}
+
+.submitButton:active {
+	background-color: var(--greyLightest);
+	color: var(--purpleLight);
+}
+
+
+
+
+/* Graph CSS */
+.graphContainer {
+	margin-top: 10px;
+}
+.graphHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.viewSelector {
+	font-size: 16px;
+	color: var(--greyLightest);
+	background-color: transparent;
+   -webkit-appearance: none; 
+   -moz-appearance: none;
+	appearance: none;
+	background-position: right;
+	background-size: contain;
+	width: 120px;
+	border: none;
+	outline: none;
+	background-repeat: no-repeat;
+	background-image: url('https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-arrow-down-b-128.png')
+}
