@@ -95,6 +95,7 @@ html, body {
 .graphHeader {
 	display: flex;
 	justify-content: space-between;
+	color: var(--greyMedium);
 }
 
 .viewSelector {

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import classNames from './styles/bpStyle.css'
 
+import { observer } from 'mobx-react';
+import store from './mobx/Store';
+import renderChart from './renderChart'
 
 class BPForm extends Component {
   constructor() {
@@ -18,7 +21,11 @@ class BPForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log('submitted')
+
+    store.addReading([this.state.systole, this.state.diastole, store.currentIndex]);
+    store.currentIndex++;
+    
+    renderChart(store.canvas, store.allData.slice(-store.dayRange))
   }
 
   handleInput(e) {
