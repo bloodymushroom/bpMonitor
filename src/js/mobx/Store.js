@@ -92,6 +92,18 @@ class Store {
     })
   }
 
+  @action auth0() {
+    fetch(server + 'auth0', {
+      method: 'get'
+    })
+    .then( (res) => {
+      console.log('auth0', res)
+    })
+    .catch( (err) => {
+      console.log('auth0 failed', err)
+    })
+  }
+
   @action addBP(bp) {
     console.log('in BP')
     fetch(server + 'BP', {

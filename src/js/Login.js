@@ -7,8 +7,8 @@ import { observer } from 'mobx-react'
 
 @observer
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       currentView: 'signIn'
@@ -18,6 +18,12 @@ class Login extends Component {
     this.login = this.login.bind(this);
     this.register = this.register.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.showLock = this.showLock.bind(this);
+  }
+
+  showLock(e) {
+    e.preventDefault();
+    this.props.lock.show();
   }
 
   toggleView(e, view) {
@@ -54,6 +60,10 @@ class Login extends Component {
     // store.isAuthenticated = true;
   }
 
+  auth0() {
+    store.auth0()
+  }
+
   render() {
     return (
       <div className={classNames.loginContainer}>
@@ -63,6 +73,7 @@ class Login extends Component {
             <input onChange={this.handleInput} name='password' type="password" placeholder="password"/>
             <input onChange={this.handleInput} name='email' type="text" placeholder="email address"/>
             <button onClick={this.register}>create</button>
+            <button onClick={this.showLock.bind(this)}>auth0</button>
             <p className={classNames.message}>Already registered? 
               <a onClick={(e) => this.toggleView(e, 'signIn')} href="#">Sign In</a>
             </p>

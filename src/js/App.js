@@ -4,7 +4,9 @@ import React, { Component } from 'react'
 import Login from './Login'
 import BPForm from './BPForm'
 import BPChart from './BPChart'
+import Auth0Login from './Auth0Login'
 import classNames from './styles/bpStyle.css'
+
 
 //mobx
 import store from './mobx/Store';
@@ -19,7 +21,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className={classNames.view}>
-				{ !store.isAuthenticated && <Login /> }
+				{ !store.isAuthenticated && <Auth0Login /> }
 				{ store.isAuthenticated &&
 					<div className={classNames.view}>
 						<BPForm />
