@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 var renderChart = function(canvas, data, params) {
     // get height and width
 
@@ -96,6 +98,8 @@ var renderChart = function(canvas, data, params) {
         ctx.fillText(Math.floor(dia0), left, dia);
       }
 
+      var date = moment(chartData[i].date)
+      console.log('date', date)
       // var tens = data.length < 100? 10 : (data.length < 500? 50 : 100);
       // // label if it is the first of 10s
       // if (chartData[i][2] % tens === 0) {
