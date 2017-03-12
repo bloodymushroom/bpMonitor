@@ -22,8 +22,12 @@ class Login extends Component {
   }
 
   showLock(e) {
+    var options = {
+  allowedConnections: ['twitter', 'facebook', 'linkedin']
+    };
+
     e.preventDefault();
-    this.props.lock.show();
+    store.lock.show()
   }
 
   toggleView(e, view) {

@@ -2,11 +2,13 @@
 import React, { Component } from 'react'
 
 import Login from './Login'
-import BPForm from './BPForm'
-import BPChart from './BPChart'
+// import BPForm from './BPForm'
+// import BPChart from './BPChart'
+import LoggedIn from './LoggedIn'
 import Auth0Login from './Auth0Login'
 import classNames from './styles/bpStyle.css'
-
+// import secrets from '../secrets.json'
+// import Auth0Lock from 'auth0-lock'
 
 //mobx
 import store from './mobx/Store';
@@ -18,15 +20,23 @@ class App extends Component {
 		super()
 	}
 
+	componentWillMount() {
+		store.getAccessToken();
+		store.initializeAuth0();
+		// store.getProfile();
+		// store.getIdToken();
+	}
+
+	componentDidMount() {
+
+	}
+
 	render() {
 		return (
 			<div className={classNames.view}>
-				{ !store.isAuthenticated && <Auth0Login /> }
-				{ store.isAuthenticated &&
-					<div className={classNames.view}>
-						<BPForm />
-						<BPChart />
-					</div>
+				{ !store.accessToken && <Login /> }
+				{ store.accessToken &&
+					<LoggedIn />
 				}
 			</div>
 		)

@@ -2,11 +2,19 @@ import { observable, action } from 'mobx'
 const server = 'http://localhost:3003/'
 import renderChart from '../renderChart'
 
+// client side auth0
+import Auth0Lock from 'auth0-lock'
+import secrets from '../../secrets.json'
+
+
 class Store {
+  // constants
   context = this;
   canvas = null;
-
+  lock = null;
+  // observables
   @observable user = null;
+  @observable accessToken = null;
   @observable userId = null;
   @observable isAuthenticated = false;
   @observable dayRange = 30;
@@ -14,6 +22,61 @@ class Store {
   @observable allData = [];
   @observable dataLoaded = false;
 
+
+  // auth0
+  @action initializeAuth0() {
+    var context = this;
+    this.lock = new Auth0Lock(secrets.CLIENT_ID, secrets.DOMAIN);
+    this.lock.on("authenticated", function(authResult) {
+      console.log('this', this)
+      context.lock.getUserInfo(authResult.accessToken, function(error, profile) {
+        if (error) {
+          // Handle error
+          return;
+        }
+
+        // Save token and profile locally
+        localStorage.setItem("accessToken", authResult.accessToken);
+        localStorage.setItem("profile", JSON.stringify(profile));
+
+        // Update DOM
+        this.accessToken = authResult.accessToken;
+        this.user = {
+          email: profile.email,
+          username: profile.name
+        }
+      });
+    });
+  }
+
+  @action getAccessToken() {
+    var accessToken = localStorage.getItem('accessToken');
+    var profile = localStorage.getItem('profile');
+
+    if (accessToken && profile) {
+      this.accessToken = accessToken;
+      this.user = {
+        email: profile.email,
+        username: profile.name
+      }
+    }
+  }
+
+  @action getProfile() {
+    if (this.token) {
+      this.lock.getUserInfo(this.accessToken, function (err, profile) {
+        if (err) {
+          console.log("Error loading the Profile", err);
+          return;
+        }
+        console.log('got profile:' , profile)
+      }.bind(this));
+    } else {
+      console.log(' no token')
+    }
+  }
+
+  // users
   @action updateUser(user) {
     this.user = user;
   }
