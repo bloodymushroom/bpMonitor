@@ -1,6 +1,5 @@
 var renderChart = function(canvas, data, params) {
     // get height and width
-    var chartData = data || [];
 
     // var canvas = this.refs.bpCanvas;
     var absHeight = canvas.height;
@@ -18,7 +17,7 @@ var renderChart = function(canvas, data, params) {
     // render axes
     ctx.translate(0, margin/2); // set 0 at bottom left
     // ctx.scale(1, -1); // y axis reverse
-    var increment = width/chartData.length;
+    var increment = data.length > 30? width/data.length : width/30;
 
     // transform y proportions 
     var max = 180;
@@ -59,11 +58,17 @@ var renderChart = function(canvas, data, params) {
     ctx.setLineDash([1,0])
 
     // draw data
-    var left = 0, lastSys = transformY(chartData[0][0]),
-        lastDia = transformY(chartData[0][1])
+    if (data.length === 0) {
+      console.log("no data")
+      return;
+    }
+    var chartData = data || [];
+
+    var left = 0, lastSys = transformY(chartData[0].systole),
+        lastDia = transformY(chartData[0].diastole)
 
     for (var i in chartData) {
-      var sys0 = chartData[i][0];
+      var sys0 = chartData[i].systole;
       var sys = sys0? transformY(sys0): lastSys;
       ctx.beginPath();
       ctx.moveTo(left, lastSys);
@@ -73,7 +78,7 @@ var renderChart = function(canvas, data, params) {
       ctx.stroke();
       lastSys = sys;
 
-      var dia0 = chartData[i][1];
+      var dia0 = chartData[i].diastole;
       var dia = dia0? transformY(dia0): lastDia;
       ctx.beginPath();
       ctx.moveTo(left, lastDia);
@@ -91,14 +96,14 @@ var renderChart = function(canvas, data, params) {
         ctx.fillText(Math.floor(dia0), left, dia);
       }
 
-      var tens = data.length < 100? 10 : (data.length < 500? 50 : 100);
-      // label if it is the first of 10s
-      if (chartData[i][2] % tens === 0) {
-        ctx.font = 'bold 16px arial';
-        ctx.fillStyle = '#9E9D9D';
-        ctx.fillText(chartData[i][2], left - 4, height + 16);
-        // ctx.fillText(Math.floor(i/increment), i - 4, height + 16);
-      }
+      // var tens = data.length < 100? 10 : (data.length < 500? 50 : 100);
+      // // label if it is the first of 10s
+      // if (chartData[i][2] % tens === 0) {
+      //   ctx.font = 'bold 16px arial';
+      //   ctx.fillStyle = '#9E9D9D';
+      //   ctx.fillText(chartData[i][2], left - 4, height + 16);
+      //   // ctx.fillText(Math.floor(i/increment), i - 4, height + 16);
+      // }
 
       left += increment;
     }
