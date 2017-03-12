@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import classNames from './styles/bpStyle.css'
+import moment from 'moment'
 
 import { observer } from 'mobx-react';
 import store from './mobx/Store';
@@ -9,8 +10,10 @@ class BPForm extends Component {
   constructor() {
     super();
 
+    var today = moment().format('YYYY-MM-DD')
+
     this.state = {
-      date: null,
+      date: today.toString(),
       systole: '',
       diastole: ''
     }
@@ -30,7 +33,8 @@ class BPForm extends Component {
 
     store.addReading({
       systole: this.state.systole, 
-      diastole: this.state.diastole
+      diastole: this.state.diastole,
+      date: this.state.date
       // index: store.currentIndex
     });
     // store.currentIndex++;
@@ -52,6 +56,12 @@ class BPForm extends Component {
         <form className={classNames.containerForm} onSubmit={this.handleSubmit} id='bpEntry'>
           { store.user && <span>Welcome, {store.user.username || store.user.email}!</span> }
           <span className={classNames.inputHeader}>Record Today's Blood Pressure</span>
+          <input 
+            id='date'
+            type='date'
+            value={this.state.date}
+            onChange={this.handleInput}
+          />
           <div className={classNames.inputContainer}>
             <input 
               id='systole' 
