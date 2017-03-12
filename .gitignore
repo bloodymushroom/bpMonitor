@@ -1,7 +1,8 @@
 node_modules
 dist/
-secrets.*.js
+secrets.*.js\*
 .vscode/
 flow-typed/
 zip/
 *.log
+*/secrets.json
