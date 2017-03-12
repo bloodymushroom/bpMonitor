@@ -1,43 +1,34 @@
 // @flow
 import React, { Component } from 'react'
 
+import Login from './Login'
 import BPForm from './BPForm'
 import BPChart from './BPChart'
 import classNames from './styles/bpStyle.css'
 
-type Props = {}
-type State = {
-	count: number
-}
+//mobx
+import store from './mobx/Store';
+import { observer } from 'mobx-react'
 
-export default class App extends Component {
-	props: Props
-	state: State
-
-	constructor(props: Props) {
-		super(props)
-
-		this.state = {
-			count: 0
-		}
-	}
-
-	incrementCount() {
-		this.setState({
-			count: ++this.state.count
-		})
-	}
-
-	componentDidMount() {
-		setInterval(this.incrementCount.bind(this), 500)
+@observer
+class App extends Component {
+	constructor() {
+		super()
 	}
 
 	render() {
 		return (
 			<div className={classNames.view}>
-				<BPForm />
-				<BPChart />
+				{ !store.isAuthenticated && <Login /> }
+				{ store.isAuthenticated &&
+					<div className={classNames.view}>
+						<BPForm />
+						<BPChart />
+					</div>
+				}
 			</div>
 		)
 	}
 }
+
+export default App

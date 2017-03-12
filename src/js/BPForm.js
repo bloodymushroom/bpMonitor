@@ -21,11 +21,21 @@ class BPForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    console.log('adding', this.state)
+    store.addBP({
+      date: this.state.date,
+      systole: +this.state.systole,
+      diastole: +this.state.diastole
+    })
 
-    store.addReading([this.state.systole, this.state.diastole, store.currentIndex]);
-    store.currentIndex++;
-    
-    renderChart(store.canvas, store.allData.slice(-store.dayRange))
+    store.addReading({
+      systole: this.state.systole, 
+      diastole: this.state.diastole
+      // index: store.currentIndex
+    });
+    // store.currentIndex++;
+    var slicer = store.dayRange < store.allData.length? store.dayRange : store.allData.length;
+    renderChart(store.canvas, store.allData.slice(-slicer))
   }
 
   handleInput(e) {
@@ -40,6 +50,7 @@ class BPForm extends Component {
   render() {
     return (
         <form className={classNames.containerForm} onSubmit={this.handleSubmit} id='bpEntry'>
+          { store.user && <span>Welcome, {store.user.username || store.user.email}!</span> }
           <span className={classNames.inputHeader}>Record Today's Blood Pressure</span>
           <div className={classNames.inputContainer}>
             <input 
