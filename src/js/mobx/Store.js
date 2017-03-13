@@ -170,6 +170,7 @@ class Store {
           console.error('didnt find user', err)
           this.isAuthenticated = false;
           this.loginStatus = err.message;
+          this.initializeAuth0();
         })
       })
     } else {
@@ -210,6 +211,7 @@ class Store {
             this.isAuthenticated = false;
             this.loginStatus = err.message;
           })
+          this.initializeAuth0();
       })
     } else {
       console.log('login failed')
