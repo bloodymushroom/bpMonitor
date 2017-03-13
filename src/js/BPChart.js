@@ -17,12 +17,12 @@ class BPChart extends Component {
 
   updateView(e) {
     store.dayRange = e.target.value;
-    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange))
+    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), 30, store.allDataObject)
   }
 
   componentDidMount() {
     store.canvas = this.refs.bpCanvas;
-    renderChart(store.canvas, fakeData.slice(-store.dayRange));
+    renderChart(store.canvas, fakeData.slice(-store.dayRange), 30, store.allDataObject);
   }
 
   render() {

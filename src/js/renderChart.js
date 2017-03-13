@@ -1,7 +1,9 @@
 import moment from 'moment'
+import { toJS } from 'mobx'
 
-var renderChart = function(canvas, data, params) {
-    // get height and width
+var months = moment.monthsShort();
+
+var renderChart = function(canvas, data, days, obj) {
 
     // var canvas = this.refs.bpCanvas;
     var absHeight = canvas.height;
@@ -17,9 +19,7 @@ var renderChart = function(canvas, data, params) {
     // ctx.strokeRect(0, 0, absWidth, absHeight);
 
     // render axes
-    ctx.translate(0, margin/2); // set 0 at bottom left
-    // ctx.scale(1, -1); // y axis reverse
-    var increment = data.length > 30? width/data.length : width/30;
+    ctx.translate(0, margin/2); 
 
     // transform y proportions 
     var max = 180;
@@ -46,71 +46,66 @@ var renderChart = function(canvas, data, params) {
       ctx.fillText(i, width + 5, transformY(i) + 8);
     }
 
-    // draw y axes
-    // for (var i = 0; i <= width; i+=increment * 20 * width/ ) {
-    //   // count++;
-    //   // if (count % Math.floor(data.length/20) === 0) {      
-    //     ctx.font = '16px arial';
-    //     ctx.fillStyle = '#5B5655';
-    //     ctx.fillText(Math.floor(i/increment), i - 4, height + 16);
-    //   // }
-    // }
-
     // reset to solid line
     ctx.setLineDash([1,0])
 
-    // draw data
-    if (data.length === 0) {
-      console.log("no data")
+    // generate the calendar
+    var currentDay = moment();
+    var increment = width/days;
+
+    var lastPoint = data[data.length - 1];
+    if (!lastPoint) {
+      console.log('no BP data')
       return;
     }
-    var chartData = data || [];
 
-    var left = 0, lastSys = transformY(chartData[0].systole),
-        lastDia = transformY(chartData[0].diastole)
+    var lastReading = obj[currentDay.format('YYYY-MM-DD')] || lastPoint;
+    var lastSys = transformY(lastReading.systole);
+    var lastDia = transformY(lastReading.diastole);
+    var left = width;
 
-    for (var i in chartData) {
-      var sys0 = chartData[i].systole;
-      var sys = sys0? transformY(sys0): lastSys;
+    for (var i = 0; i < days; i++) {
+      console.log(currentDay.format('YYYY-MM-DD'))
+      var dayString = currentDay.format('YYYY-MM-DD')
+      console.log('corresponding object:', obj[dayString])
+
+      // draw systole
+      var sys = lastSys;
+      var dia = lastDia;
+
+      if (obj[dayString]) {
+        var currentBP = obj[dayString]
+        sys = transformY(currentBP.systole);
+        dia = transformY(currentBP.diastole);
+      }
+      // draw sys
       ctx.beginPath();
       ctx.moveTo(left, lastSys);
-      ctx.lineTo(left + increment, sys);
+      ctx.lineTo(left - increment, sys);
       ctx.lineWidth = 3;
       ctx.strokeStyle = '#552DB9'
       ctx.stroke();
       lastSys = sys;
 
-      var dia0 = chartData[i].diastole;
-      var dia = dia0? transformY(dia0): lastDia;
+      // draw diastole
       ctx.beginPath();
       ctx.moveTo(left, lastDia);
-      ctx.lineTo(left + increment, dia);
+      ctx.lineTo(left - increment, dia);
       ctx.lineWidth = 3;
-      ctx.strokeStyle = '#777FAF'
+      ctx.strokeStyle = '#552DB9';
       ctx.stroke();
       lastDia = dia;
 
-      if ( i % 5 === 0) {
-
-        ctx.font = '16px arial';
-        ctx.strokeStyle = 'black';
-        ctx.fillText(Math.floor(sys0), left, sys);
-        ctx.fillText(Math.floor(dia0), left, dia);
+      // label every month
+      if (currentDay.date() === 1) {
+        ctx.font = 'bold 16px arial';
+        ctx.fillStyle = '#9E9D9D';
+        ctx.fillText(months[currentDay.month()], left - 4, height + 16);                
       }
-
-      var date = moment(chartData[i].date)
-      console.log('date', date)
-      // var tens = data.length < 100? 10 : (data.length < 500? 50 : 100);
-      // // label if it is the first of 10s
-      // if (chartData[i][2] % tens === 0) {
-      //   ctx.font = 'bold 16px arial';
-      //   ctx.fillStyle = '#9E9D9D';
-      //   ctx.fillText(chartData[i][2], left - 4, height + 16);
-      //   // ctx.fillText(Math.floor(i/increment), i - 4, height + 16);
-      // }
-
-      left += increment;
+      currentDay.subtract(1, 'days')
+      left -= increment;
     }
+
   }
 
 export default renderChart;

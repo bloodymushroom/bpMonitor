@@ -14,8 +14,8 @@ class BPForm extends Component {
 
     this.state = {
       date: today.toString(),
-      systole: null,
-      diastole: null,
+      systole: '',
+      diastole: '',
       errorMessage: ''
     }
 
@@ -25,7 +25,7 @@ class BPForm extends Component {
   }
 
   formIsValid() {
-    if (!this.state.systole || !this.state.diastole) {
+    if (this.state.systole.length === 0 || this.state.diastole.length === 0) {
       this.setState({
         errorMessage: 'Please fill out both BP fields.'
       })
@@ -33,11 +33,11 @@ class BPForm extends Component {
       return false;
     }
 
-    if (this.state.systole < 0 || this.state.diastole < 0
+    if (this.state.systole < 1 || this.state.diastole < 1
       || this.state.systole > 999 || this.state.diastole > 999) {
       
       this.setState({
-        errorMessage: 'Pressures must be between 0 and 1000'
+        errorMessage: 'Pressures must be between 1 and 1000'
       })
 
       return false;
@@ -63,15 +63,14 @@ class BPForm extends Component {
       diastole: +this.state.diastole
     })
 
-    store.addReading({
-      systole: this.state.systole, 
-      diastole: this.state.diastole,
-      date: this.state.date
-      // index: store.currentIndex
-    });
+    // store.addReading({
+    //   systole: this.state.systole, 
+    //   diastole: this.state.diastole,
+    //   date: this.state.date
+    //   // index: store.currentIndex
+    // });
     // store.currentIndex++;
     var slicer = store.dayRange < store.allData.length? store.dayRange : store.allData.length;
-    renderChart(store.canvas, store.allData.slice(-slicer))
   }
 
   handleInput(e) {
