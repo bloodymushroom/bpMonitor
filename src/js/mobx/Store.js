@@ -1,6 +1,7 @@
-import { observable, action } from 'mobx'
+import { observable, action, toJS } from 'mobx'
 const server = 'http://localhost:3003/'
 import renderChart from '../renderChart'
+import moment from 'moment'
 
 // client side auth0
 import Auth0Lock from 'auth0-lock'
@@ -22,7 +23,9 @@ class Store {
   @observable dayRange = 30;
   @observable loginStatus = null;
   @observable allData = [];
-  @observable dataLoaded = false;
+  // @observable dataLoaded = false;
+
+  @observable allDataObject = {};
 
   @action resetAll() {
     this.user = null;
@@ -33,6 +36,18 @@ class Store {
     this.allData = [];
   }
   // auth0
+  @action objectifyData() {
+    this.allData.forEach((data) => {
+      this.setObjectBP(data.date, data);
+    })
+  }
+
+  // sets data for one date
+  @action setObjectBP(date, data) {
+    var thisDate = moment(date).format('YYYY-MM-DD')
+    this.allDataObject[thisDate] = data;
+  }
+
   @action initializeAuth0() {
     console.log('no token');
     var context = this;
@@ -104,19 +119,19 @@ class Store {
     this.user = user;
   }
 
-  @action addReading(bp) {
-    console.log('adding ', bp, 'to chart')
-    this.allData.push(bp);
-  }
-
   @action startSession(res) {
     console.log('in startsession', res)
+
+    // set the user and bps 
     this.user = res.user;
     this.loggedIn = true;
     this.allData = res.bps;
+    this.objectifyData();
     console.log('got user', this.user, 'got data', this.allData)
+
+    // give time for component to mount before rendering
     setTimeout(() => {
-      renderChart(store.canvas, this.allData.slice(-this.dayRange))      
+      renderChart(store.canvas, this.allData.slice(-this.dayRange), 30, this.allDataObject)      
     }, 1000)
   }
 
@@ -202,20 +217,12 @@ class Store {
     }
   }
 
-  @action auth0() {
-    fetch(server + 'auth0', {
-      method: 'get'
-    })
-    .then( (res) => {
-      console.log('auth0', res)
-    })
-    .catch( (err) => {
-      console.log('auth0 failed', err)
-    })
-  }
-
   @action addBP(bp) {
-    console.log('in BP')
+    // update the DOM
+    this.setObjectBP(bp.date, bp)
+    renderChart(store.canvas, this.allData.slice(-30), 30, this.allDataObject)
+    
+    // send to DB
     fetch(server + 'BP', {
       method: 'post',
       headers: {
@@ -231,30 +238,11 @@ class Store {
       console.log('responded')
       return res.json();
     })
-    .then( (bp) => {
-      console.log('added', bp)
+    .then( (res) => {
+      console.log('added', bp, res)
     })
     .catch( e => console.log('could not add bp'))
   }
-
-  @action getBP(userId) {
-    fetch(server + 'BP', {
-      method: 'get'
-    })
-    .then( (data) => data.json())
-    .then( (bps) => {
-      console.log('got BP response')
-    })
-  }
-
-
-  // allData = Array.from( new Array(600), (x, index) => {
-  //   var sys = Math.floor(Math.random() * 10) + 120;
-  //   var dia = Math.floor(Math.random() * 10) + 80;
-  //   return [sys, dia, index]
-  // })
-
-  @observable currentIndex = this.allData.length;
 }
 
 const store = new Store();
