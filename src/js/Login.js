@@ -22,10 +22,6 @@ class Login extends Component {
   }
 
   showLock(e) {
-    var options = {
-  allowedConnections: ['twitter', 'facebook', 'linkedin']
-    };
-
     e.preventDefault();
     store.lock.show()
   }
@@ -53,7 +49,8 @@ class Login extends Component {
 
   register(e) {
     e.preventDefault();
-    store.register(this.state)
+    console.log('register')
+    store.register()
   }
 
   login(e) {
@@ -68,6 +65,7 @@ class Login extends Component {
     store.auth0()
   }
 
+
   render() {
     return (
       <div className={classNames.loginContainer}>
@@ -76,7 +74,7 @@ class Login extends Component {
             <input onChange={this.handleInput} name='username' type="text" placeholder="name"/>
             <input onChange={this.handleInput} name='password' type="password" placeholder="password"/>
             <input onChange={this.handleInput} name='email' type="text" placeholder="email address"/>
-            <button onClick={this.register}>create</button>
+            <button onClick={this.register}>register</button>
             <button onClick={this.showLock.bind(this)}>auth0</button>
             <p className={classNames.message}>Already registered? 
               <a onClick={(e) => this.toggleView(e, 'signIn')} href="#">Sign In</a>

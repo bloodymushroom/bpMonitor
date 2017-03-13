@@ -22,9 +22,6 @@ class App extends Component {
 
 	componentWillMount() {
 		store.getAccessToken();
-		store.initializeAuth0();
-		// store.getProfile();
-		// store.getIdToken();
 	}
 
 	componentDidMount() {
@@ -34,8 +31,8 @@ class App extends Component {
 	render() {
 		return (
 			<div className={classNames.view}>
-				{ !store.accessToken && <Login /> }
-				{ store.accessToken &&
+				{ !store.loggedIn && <Login /> }
+				{ store.loggedIn &&
 					<LoggedIn />
 				}
 			</div>

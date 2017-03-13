@@ -14,17 +14,49 @@ class BPForm extends Component {
 
     this.state = {
       date: today.toString(),
-      systole: '',
-      diastole: ''
+      systole: null,
+      diastole: null,
+      errorMessage: ''
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.formIsValid = this.formIsValid.bind(this);
+  }
+
+  formIsValid() {
+    if (!this.state.systole || !this.state.diastole) {
+      this.setState({
+        errorMessage: 'Please fill out both BP fields.'
+      })
+
+      return false;
+    }
+
+    if (this.state.systole < 0 || this.state.diastole < 0
+      || this.state.systole > 999 || this.state.diastole > 999) {
+      
+      this.setState({
+        errorMessage: 'Pressures must be between 0 and 1000'
+      })
+
+      return false;
+    }
+
+    this.setState({
+      errorMessage: ''
+    })
+
+    return true;
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log('adding', this.state)
+
+    if (!this.formIsValid()) {
+      return;
+    }
+
     store.addBP({
       date: this.state.date,
       systole: +this.state.systole,
@@ -54,7 +86,7 @@ class BPForm extends Component {
   render() {
     return (
         <form className={classNames.containerForm} onSubmit={this.handleSubmit} id='bpEntry'>
-          { store.user && <span>Welcome, {store.user.username || store.user.email}!</span> }
+          <span>Welcome, {store.user.username}!</span>
           <span className={classNames.inputHeader}>Record Today's Blood Pressure</span>
           <input 
             id='date'
@@ -77,6 +109,7 @@ class BPForm extends Component {
               onChange={this.handleInput}
             />
           </div>
+          <span className={classNames.errorMessage}>{this.state.errorMessage}</span>
           <input className={classNames.submitButton} type='submit' value='Submit' />
         </form>
     )   
