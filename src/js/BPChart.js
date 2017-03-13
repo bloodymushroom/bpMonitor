@@ -17,12 +17,12 @@ class BPChart extends Component {
 
   updateView(e) {
     store.dayRange = e.target.value;
-    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), 30, store.allDataObject)
+    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
   }
 
   componentDidMount() {
     store.canvas = this.refs.bpCanvas;
-    renderChart(store.canvas, fakeData.slice(-store.dayRange), 30, store.allDataObject);
+    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
   }
 
   render() {
@@ -41,7 +41,6 @@ class BPChart extends Component {
             <option onClick={this.updateView} value='90' >last 3 months</option>
             <option onClick={this.updateView} value='180' >last 6 months</option>
             <option onClick={this.updateView} value='365' >last year</option>
-            <option onClick={this.updateView} value='0' >all time</option>
           </select>
         </div>
         <canvas 

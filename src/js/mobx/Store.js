@@ -220,7 +220,7 @@ class Store {
   @action addBP(bp) {
     // update the DOM
     this.setObjectBP(bp.date, bp)
-    renderChart(store.canvas, this.allData.slice(-30), 30, this.allDataObject)
+    renderChart(store.canvas, this.allData.slice(-this.dayRange), this.dayRange, this.allDataObject)
     
     // send to DB
     fetch(server + 'BP', {

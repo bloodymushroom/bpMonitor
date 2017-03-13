@@ -82,25 +82,35 @@ var renderChart = function(canvas, data, days, obj) {
       ctx.beginPath();
       ctx.moveTo(left, lastSys);
       ctx.lineTo(left - increment, sys);
-      ctx.lineWidth = 3;
+
+      // set line style
+      ctx.lineWidth = days >= 180? 1: 3;
       ctx.strokeStyle = '#552DB9'
       ctx.stroke();
-      lastSys = sys;
 
       // draw diastole
       ctx.beginPath();
       ctx.moveTo(left, lastDia);
       ctx.lineTo(left - increment, dia);
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#552DB9';
       ctx.stroke();
+
+      // set next
+      lastSys = sys;
       lastDia = dia;
 
-      // label every month
-      if (currentDay.date() === 1) {
-        ctx.font = 'bold 16px arial';
-        ctx.fillStyle = '#9E9D9D';
-        ctx.fillText(months[currentDay.month()], left - 4, height + 16);                
+      // label every month if under 6 mo or every 3 months if more
+      if (days > 180) {
+        if (currentDay.dayOfYear() % 60 === 0) {
+          ctx.font = 'bold 16px arial';
+          ctx.fillStyle = '#9E9D9D';
+          ctx.fillText(months[currentDay.month()], left - 4, height + 16);                
+          }
+      } else {
+        if (currentDay.date() === 1) {
+          ctx.font = 'bold 16px arial';
+          ctx.fillStyle = '#9E9D9D';
+          ctx.fillText(months[currentDay.month()], left - 4, height + 16);                
+        }        
       }
       currentDay.subtract(1, 'days')
       left -= increment;
