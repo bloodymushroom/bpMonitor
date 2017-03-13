@@ -65,6 +65,11 @@ class Login extends Component {
     store.auth0()
   }
 
+  componentWillMount(){
+    store.initializeAuth0(true);
+    store.initialRegister();
+  }
+
 
   render() {
     return (

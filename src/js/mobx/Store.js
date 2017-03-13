@@ -48,10 +48,9 @@ class Store {
     this.allDataObject[thisDate] = data;
   }
 
-  @action initializeAuth0() {
-    console.log('no token');
+  @action initializeAuth0(dontShow) {
     var context = this;
-    this.lock = new Auth0Lock(secrets.CLIENT_ID, secrets.DOMAIN, {redirect: false});
+    this.lock = new Auth0Lock(secrets.CLIENT_ID, secrets.DOMAIN);
     this.lock.on("authenticated", function(authResult) {
       context.lock.getUserInfo(authResult.accessToken, function(error, profile) {
         if (error) {
@@ -64,6 +63,8 @@ class Store {
         localStorage.setItem("accessToken", authResult.accessToken);
         localStorage.setItem("profile", JSON.stringify(profile));
         localStorage.setItem("idToken", authResult.idToken);
+
+        context.loggedIn = true;
         
         // Update DOM
         context.user = {
@@ -78,7 +79,9 @@ class Store {
       });
     });
 
-    this.lock.show();
+    if(!dontShow) {
+      this.lock.show()
+    };
   }
 
   @action getAccessToken() {
@@ -133,6 +136,47 @@ class Store {
     setTimeout(() => {
       renderChart(store.canvas, this.allData.slice(-this.dayRange), 30, this.allDataObject)      
     }, 1000)
+  }
+
+  @action initialRegister() {
+    console.log('in intitial register')
+    if (localStorage.idToken && localStorage.profile) {
+      const profile = JSON.parse(localStorage.profile);
+      console.log(profile.clientID)
+      fetch(server + 'register', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.idToken
+        },
+        body: JSON.stringify({
+          username: profile.name,
+          email: profile.email,
+          clientID: profile.clientID
+        })
+      })
+      .then( (res) => {
+        if (res.status !== 200) {
+          throw res.json();
+        }
+        console.log('status', res.status);
+        return res.json()
+      })
+      .then( (data) => {
+        this.loggedIn = true;
+        console.log('added user!', data)
+        this.startSession(data)
+        return data;
+      })
+      .catch( (e) => {
+        e.then( (err) => {
+          console.error('didnt find user', err)
+          this.isAuthenticated = false;
+          this.loginStatus = err.message;
+          this.initializeAuth0();
+        })
+      })
+    }
   }
 
   @action register() {
