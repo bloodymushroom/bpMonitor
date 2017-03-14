@@ -20,7 +20,7 @@ class BPChart extends Component {
     renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
   }
 
-  componentWillMount() {
+  logout(e) {
 
   }
 
@@ -53,7 +53,6 @@ class BPChart extends Component {
           height='280px'
           ref='bpCanvas'
         />
-        
       </div>
     )
   }

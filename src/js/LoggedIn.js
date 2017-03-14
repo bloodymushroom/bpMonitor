@@ -13,12 +13,6 @@ class LoggedIn extends Component {
     super(props)
   }
 
-  logout() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('profile');
-    store.resetAll();
-  }
-
   componentDidMount() {
     // console.log('login mounted')
     // store.initializeAuth0(true);
@@ -29,7 +23,6 @@ class LoggedIn extends Component {
       <div className={classNames.view}>
         <BPForm />
         <BPChart />
-        <button onClick={this.logout}>logout</button>
       </div>
     )
   }

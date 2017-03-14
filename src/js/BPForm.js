@@ -75,12 +75,19 @@ class BPForm extends Component {
     })
   }
 
+  logout() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('profile');
+    store.resetAll();
+  }
+
   render() {
     return (
         <form className={classNames.containerForm} onSubmit={this.handleSubmit} id='bpEntry'>
-          {store.user && <span>Welcome, {store.user.username}!</span>}
+          {store.user && <span>Welcome, {store.user.username}! <button onClick={this.logout}>logout</button></span>}
           <span className={classNames.inputHeader}>Record Today's Blood Pressure</span>
           <input 
+            style={{height: '30px', fontSize: '16px'}}
             id='date'
             type='date'
             value={this.state.date}
