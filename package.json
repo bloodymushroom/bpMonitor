@@ -1,20 +1,18 @@
 {
-  "name": "react-flow-webpack-bp",
+  "name": "BPMonitorfrontend",
   "version": "1.0.0",
-  "description": "React + Flow + Webpack Boilerplate",
+  "description": "BP Monitor for cricket health",
   "main": "dist/index.bundle.js",
   "scripts": {
     "clear-dist": "rm -rf dist/*",
     "build-web": "npm run clear-dist; NODE_ENV=production node -r babel-register node_modules/.bin/webpack --config webpack.config.prod.web.js -p --progress --profile --colors",
     "build-node": "npm run clear-dist; NODE_ENV=production node -r babel-register node_modules/.bin/webpack --config webpack.config.prod.node.js -p --progress --profile --colors",
     "build-module": "npm run clear-dist; NODE_ENV=production node -r babel-register node_modules/.bin/webpack --config webpack.config.prod.module.js -p --progress --profile --colors",
-    "start": "npm run clear-dist; NODE_ENV=development PORT=3002 node -r babel-register node_modules/.bin/webpack-dev-server --inline",
-    "wstart": "cd workbench; npm start",
-    "flow-typed": "./node_modules/.bin/flow-typed install"
+    "start": "npm run clear-dist; NODE_ENV=development PORT=3002 node -r babel-register node_modules/.bin/webpack-dev-server --inline"
   },
   "author": {
-    "name": "Eric Yang",
-    "email": "eeyang92@gmail.com"
+    "name": "Emm Lan",
+    "email": "emmeline.lan@gmail.com"
   },
   "license": "MIT",
   "dependencies": {
