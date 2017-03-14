@@ -6,3 +6,5 @@ flow-typed/
 zip/
 *.log
 */secrets.json
+.env
+.DS_STORE

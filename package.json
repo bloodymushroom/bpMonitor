@@ -4,6 +4,8 @@
   "description": "BP Monitor for cricket health",
   "main": "dist/index.bundle.js",
   "scripts": {
+    "server": "NODE_ENV=development PORT=3003 nodemon -r babel-register ./server/server.js",
+    "deploy": "NODE_ENV=production PORT=3003 node -r babel-register ./server/server.js",
     "clear-dist": "rm -rf dist/*",
     "build-web": "npm run clear-dist; NODE_ENV=production node -r babel-register node_modules/.bin/webpack --config webpack.config.prod.web.js -p --progress --profile --colors",
     "build-node": "npm run clear-dist; NODE_ENV=production node -r babel-register node_modules/.bin/webpack --config webpack.config.prod.node.js -p --progress --profile --colors",
@@ -17,10 +19,17 @@
   "license": "MIT",
   "dependencies": {
     "auth0-lock": "10.7.0",
+    "body-parser": "^1.17.1",
+    "connect-mongo": "^1.3.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "express-jwt": "^5.1.0",
+    "express-session": "^1.15.1",
     "fs": "^0.0.1-security",
     "mobx": "^3.1.5",
     "mobx-react": "^4.1.2",
     "moment": "^2.17.1",
+    "mongoose": "^4.9.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   },
