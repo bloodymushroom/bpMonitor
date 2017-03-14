@@ -60,10 +60,6 @@ class Login extends Component {
     // store.isAuthenticated = true;
   }
 
-  auth0() {
-    // store.auth0()
-  }
-
   componentWillMount(){
     store.initializeAuth0(true);
   }
@@ -78,7 +74,6 @@ class Login extends Component {
             <input onChange={this.handleInput} name='password' type="password" placeholder="password"/>
             <input onChange={this.handleInput} name='email' type="text" placeholder="email address"/>
             <button onClick={this.register}>register</button>
-            <button onClick={this.showLock.bind(this)}>auth0</button>
             <p className={classNames.message}>Already registered? 
               <a onClick={(e) => this.toggleView(e, 'signIn')} href="#">Sign In</a>
             </p>

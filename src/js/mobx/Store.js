@@ -1,12 +1,12 @@
 import { observable, action, toJS } from 'mobx'
-const server = 'http://localhost:3003/'
 import renderChart from '../renderChart'
 import moment from 'moment'
 
 // client side auth0
 import Auth0Lock from 'auth0-lock'
-import secrets from '../../secrets.json'
+import secrets from '../../../secrets/secrets.json'
 
+const server = secrets.SERVER
 
 class Store {
   // constants
