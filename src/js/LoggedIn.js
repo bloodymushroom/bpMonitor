@@ -19,8 +19,9 @@ class LoggedIn extends Component {
     store.resetAll();
   }
 
-  componentWillMount() {
-    store.getAccessToken();
+  componentDidMount() {
+    // console.log('login mounted')
+    // store.initializeAuth0(true);
   }
 
   render() {

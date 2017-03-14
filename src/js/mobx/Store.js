@@ -59,12 +59,9 @@ class Store {
         }
 
         // Save token and profile locally
-        console.log(authResult)
         localStorage.setItem("accessToken", authResult.accessToken);
         localStorage.setItem("profile", JSON.stringify(profile));
         localStorage.setItem("idToken", authResult.idToken);
-
-        context.loggedIn = true;
         
         // Update DOM
         context.user = {
@@ -75,7 +72,7 @@ class Store {
         context.accessToken = authResult.accessToken;
         context.idToken = authResult.idToken;
 
-        console.log('added user: ', profile.email, profile.name)
+        context.initialRegister();
       });
     });
 
@@ -107,10 +104,8 @@ class Store {
     if (this.token) {
       this.lock.getUserInfo(this.accessToken, function (err, profile) {
         if (err) {
-          console.log("Error loading the Profile", err);
           return;
         }
-        console.log('got profile:' , profile)
       }.bind(this));
     } else {
       console.log(' no token')
@@ -123,26 +118,22 @@ class Store {
   }
 
   @action startSession(res) {
-    console.log('in startsession', res)
 
     // set the user and bps 
     this.user = res.user;
     this.loggedIn = true;
     this.allData = res.bps;
     this.objectifyData();
-    console.log('got user', this.user, 'got data', this.allData)
 
     // give time for component to mount before rendering
     setTimeout(() => {
       renderChart(store.canvas, this.allData.slice(-this.dayRange), 30, this.allDataObject)      
-    }, 1000)
+    }, 500)
   }
 
   @action initialRegister() {
-    console.log('in intitial register')
     if (localStorage.idToken && localStorage.profile) {
       const profile = JSON.parse(localStorage.profile);
-      console.log(profile.clientID)
       fetch(server + 'register', {
         method: 'post',
         headers: {
@@ -183,7 +174,6 @@ class Store {
     // this.lock.show();
     if (localStorage.idToken && localStorage.profile) {
       const profile = JSON.parse(localStorage.profile);
-      console.log(profile.clientID)
       fetch(server + 'register', {
         method: 'post',
         headers: {
@@ -191,7 +181,6 @@ class Store {
           'Authorization': 'Bearer ' + localStorage.idToken
         },
         body: JSON.stringify({
-          username: profile.name,
           email: profile.email,
           clientID: profile.clientID
         })
@@ -200,18 +189,15 @@ class Store {
         if (res.status !== 200) {
           throw res.json();
         }
-        console.log('status', res.status);
         return res.json()
       })
       .then( (data) => {
         this.loggedIn = true;
-        console.log('added user!', data)
         this.startSession(data)
         return data;
       })
       .catch( (e) => {
         e.then( (err) => {
-          console.error('didnt find user', err)
           this.isAuthenticated = false;
           this.loginStatus = err.message;
           this.initializeAuth0();
@@ -226,7 +212,6 @@ class Store {
   @action login() {
     if (localStorage.idToken && localStorage.profile) {
       const profile = JSON.parse(localStorage.profile);
-      console.log('email': localStorage.profile.email)
       fetch(server + 'login', {
         method: 'post',
         headers: {
@@ -243,14 +228,14 @@ class Store {
           throw res.json();
         }
 
-        console.log('status', res.status);
         return res.json()
       })
       .then((res)  => {
+        console.log('response in login: ', res)
         this.startSession(res)
       })
       .catch(e => {
-        console.log('error before login promise:', e)
+          console.log('error in login')
           e.then( (err) => {
             this.isAuthenticated = false;
             this.loginStatus = err.message;
@@ -258,7 +243,6 @@ class Store {
           this.initializeAuth0();
       })
     } else {
-      console.log('login failed')
       this.initializeAuth0();
     }
   }

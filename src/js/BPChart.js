@@ -20,9 +20,13 @@ class BPChart extends Component {
     renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
   }
 
+  componentWillMount() {
+
+  }
+
   componentDidMount() {
     store.canvas = this.refs.bpCanvas;
-    renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
+    // renderChart(this.refs.bpCanvas, store.allData.slice(-store.dayRange), store.dayRange, store.allDataObject)
   }
 
   render() {

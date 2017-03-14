@@ -54,8 +54,8 @@ var renderChart = function(canvas, data, days, obj) {
     var increment = width/days;
 
     var lastPoint = data[data.length - 1];
-    if (!lastPoint) {
-      console.log('no BP data')
+    if (Object.keys(obj).length === 0) {
+      console.log('no data')
       return;
     }
 
@@ -65,9 +65,7 @@ var renderChart = function(canvas, data, days, obj) {
     var left = width;
 
     for (var i = 0; i < days; i++) {
-      console.log(currentDay.format('YYYY-MM-DD'))
       var dayString = currentDay.format('YYYY-MM-DD')
-      console.log('corresponding object:', obj[dayString])
 
       // draw systole
       var sys = lastSys;

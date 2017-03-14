@@ -16,11 +16,7 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-		store.getAccessToken();
-	}
-
-	componentDidMount() {
-
+		// store.initializeAuth0(true);
 	}
 
 	render() {

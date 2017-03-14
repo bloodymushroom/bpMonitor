@@ -49,25 +49,23 @@ class Login extends Component {
 
   register(e) {
     e.preventDefault();
-    console.log('register')
     store.register()
   }
 
   login(e) {
     e.preventDefault();
-
+// 
+    // store.register()
     store.login(this.state);
-    console.log('status', this.state, store.loginStatus)
     // store.isAuthenticated = true;
   }
 
   auth0() {
-    store.auth0()
+    // store.auth0()
   }
 
   componentWillMount(){
     store.initializeAuth0(true);
-    store.initialRegister();
   }
 
 
